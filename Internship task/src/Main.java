@@ -16,8 +16,8 @@ public static void main(String[] args) {
         // Create cards for player 2's deck
        List<Card> player2Deck = Utility.generateCards();
 
-        Player player1 = new Player(20,player1Deck);
-        Player player2 = new Player(20,player2Deck);
+        Player player1 = new Player(20, player1Deck);
+        Player player2 = new Player(20, player2Deck);
         // Create a game instance
 
         

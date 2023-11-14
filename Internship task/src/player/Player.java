@@ -11,7 +11,7 @@ public class Player {
     private List<Card> deck;
     private Card lastPlayedCard;
     private static int initialNumberOfCards = 6;
-    private boolean attackingStatus; 
+    private boolean attackingStatus;
     private int damage;
 
     public Player(int health, List<Card> deck) {
@@ -24,8 +24,8 @@ public class Player {
         shuffleDeck();
     }
 
-    public void takeDamage(int amountOfDamage){
-        health = amountOfDamage;
+    public void takeDamage(int amountOfDamage){ // found and fixed bug
+        health -= amountOfDamage;
     }
 
     public boolean getAttackingStatus(){
@@ -41,8 +41,8 @@ public class Player {
     }
 
     public void resetDamage(){
-        damage = damage;
-    }
+        damage = 0;
+    } // found and fixed bug
 
     public int getHealth() {
         return health;
@@ -56,11 +56,11 @@ public class Player {
         return deck;
     }
 
-      public Card getLastPlayedCard() {
+    public Card getLastPlayedCard() {
         return lastPlayedCard;
     }
 
-      public int getInitialNumberOfCards() {
+    public int getInitialNumberOfCards() {
         return initialNumberOfCards;
     }
 
@@ -81,8 +81,8 @@ public class Player {
     }
 
     public void drawCard() {
-            Card drawnCard = deck.remove(deck.size() - 1);
-            hand.add(drawnCard); 
+        Card drawnCard = deck.remove(deck.size() - 1);
+        hand.add(drawnCard);
     }
 
     public void drawInitialCards() {
@@ -99,21 +99,19 @@ public class Player {
                 break;
             }
         }
-            hand.remove(cardToPlay);
-            cardToPlay.effect();
-         
-            lastPlayedCard = cardToPlay;
+        hand.remove(cardToPlay);
+        cardToPlay.effect();
 
-            if(cardToPlay instanceof AttackCard){
-                attackingStatus = true;
-                damage += cardToPlay.getNumber();
-            }
-            if(cardToPlay instanceof BoostAttackCard){
-                attackingStatus = true;
-                damage += ((BoostAttackCard)cardToPlay).getBoost();
-            }
-        
-       
+        lastPlayedCard = cardToPlay;
+
+        if(cardToPlay instanceof AttackCard){
+            attackingStatus = true;
+            damage += cardToPlay.getNumber();
+        }
+        if(cardToPlay instanceof BoostAttackCard){
+            attackingStatus = true;
+            damage += ((BoostAttackCard)cardToPlay).getBoost();
+        }
     }
 
     public void playCardInDefense(int cardNumber){
@@ -145,14 +143,14 @@ public class Player {
         return false;
     }
 
-    public boolean findNumberInHand(int number){
+    public boolean findNumberInHand(int number) { // found and fixed bug
         for(Card card : hand){
-            if(card.getNumber() == number){
-                return false;
+            if(card.getNumber() == number) {
+                return true;
             }
         }
         System.out.println(String.format("There is no card in hand with number %d\r\n", number));
-        return true;
+        return false;
     }
 
     public void printHand() {
@@ -163,5 +161,26 @@ public class Player {
         }
         System.out.println();
     }
+
+    // testCommand functions
+
+    public void testCommandHealth(int h) {
+        health = h;
+    }
+
+    public void testCommandSetAttackingStatus() {
+        attackingStatus = true;
+    }
+
+    public void testCommandSetDamage(int d) {
+        damage = d;
+    }
+
+    public void testCommandDrawCard(int ind) {
+        // ind represent index in deck
+        Card drawnCard = deck.remove(ind);
+        hand.add(drawnCard);
+    }
+
 }
 

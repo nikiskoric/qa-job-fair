@@ -119,8 +119,8 @@ public class Game {
         }
         else {
             //player must take damage from attack
-        currentPlayer.takeDamage(opponentPlayer.getDamage());
-        System.out.println("Ohhh you've taken damage... Health: " + currentPlayer.getHealth() + "\r\n");
+            currentPlayer.takeDamage(opponentPlayer.getDamage());
+            System.out.println("Ohhh you've taken damage... Health: " + currentPlayer.getHealth() + "\r\n");
         }
     }
 

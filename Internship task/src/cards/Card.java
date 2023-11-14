@@ -1,7 +1,7 @@
 package cards;
 
 public interface Card {
-    int getNumber();
+    int getNumber();  // number represents type of card
     void effect();
     String description();
 }
