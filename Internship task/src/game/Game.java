@@ -155,5 +155,45 @@ public class Game {
     
         return input;
     }
-    
+
+    // test commands
+
+    public void testCommandForGameEnded(boolean b) {
+        gameEnded = b;
+    }
+
+    public boolean testCommandForHasHealth(int h) {
+        player1.testCommandHealth(h); // sets health to given value
+        return hasHealth(player1);
+    }
+
+    public boolean testCommandHandEmpty(int i) {
+        if(i == 0) {
+            return isHandEmpty(player1);
+        } else if(i == 1) {
+            player1.drawCard(); // he draws boost card
+            return isHandEmpty(player1);
+        } else {
+            player1.playCard(2); // he plays boost card
+            return isHandEmpty(player1);
+        }
+    }
+
+    public boolean testCommandIsPlayerWithoutOptionsToPlay(int i) {
+        if(i == 0) {
+            return isPlayerWithoutOptionsToPlay(player1);
+        } else if(i == 1) {
+            player1.drawCard();
+            // he draws boost card, hand and deck aren't empty
+            return isPlayerWithoutOptionsToPlay(player1);
+        } else if(i == 2) {
+            player1.testCommandEmptyHandAndOrDeck(0);
+            // deck is empty
+            return isPlayerWithoutOptionsToPlay(player1);
+        } else {
+            player1.testCommandEmptyHandAndOrDeck(1);
+            // hand and deck are empty
+            return isPlayerWithoutOptionsToPlay(player1);
+        }
+    }
 }

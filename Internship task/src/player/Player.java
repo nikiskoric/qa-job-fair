@@ -182,5 +182,13 @@ public class Player {
         hand.add(drawnCard);
     }
 
+    public void testCommandEmptyHandAndOrDeck(int i) {
+        if (i == 0) {
+            deck.clear();
+        } else {
+            deck.clear();
+            hand.clear();
+        }
+    }
 }
 
