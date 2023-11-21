@@ -1,0 +1,4 @@
+Some things could be done better, but I've learned a lot throught the whole process.
+I've left some comments in the code.
+All is tested from the most inner calls, so we can be sure that when a function calls another, that called function is correct.
+I really enjoyed the process, it give me courage to try QA testing. 
