@@ -1,6 +1,8 @@
 package game;
 
 import java.util.Scanner;
+
+import help.HelpInputProvider;
 import player.*;
 
 
@@ -26,8 +28,8 @@ public class Game {
     }
 
     private boolean hasHealth(Player player){
-        return player.getHealth() != 0;
-    }
+        return player.getHealth() > 0;
+    } // found and fixed bug
 
     private boolean isHandEmpty(Player player){
         return player.getHand().isEmpty();
@@ -179,6 +181,8 @@ public class Game {
         }
     }
 
+    // this would be better if I extended this class and overrode next methods
+
     public boolean testCommandIsPlayerWithoutOptionsToPlay(int i) {
         if(i == 0) {
             return isPlayerWithoutOptionsToPlay(player1);
@@ -194,6 +198,51 @@ public class Game {
             player1.testCommandEmptyHandAndOrDeck(1);
             // hand and deck are empty
             return isPlayerWithoutOptionsToPlay(player1);
+        }
+    }
+
+    public String testCommandGetPlayersDistinctInput(int opponentDamage, Player currentPlayer, HelpInputProvider inputProvider) {
+        String input;
+
+        do {
+            input = inputProvider.getInput();
+        } while (!input.equalsIgnoreCase("take") && !input.equals("1") && !(input.equals(Integer.toString(opponentDamage)) && currentPlayer.findNumberInHand(Integer.parseInt(input))));
+
+        return input;
+    }
+
+    public void testCommandTryToDefend(Player currentPlayer, Player opponentPlayer, HelpInputProvider inputProvider){
+
+        //player has a way to deflect the attack
+        System.out.println(String.format("Avoid the attack or take the damage... ('take'/1/%d)\r\n", opponentPlayer.getDamage()));
+        String decision = testCommandGetPlayersDistinctInput(opponentPlayer.getDamage(), currentPlayer, inputProvider);
+
+        if (decision.equalsIgnoreCase("take")) {
+            //player wants to take damage
+            currentPlayer.takeDamage(opponentPlayer.getDamage());
+            System.out.println("Ohhh you've taken damage... Health: " + currentPlayer.getHealth() + "\r\n");
+        }
+        if (decision.equalsIgnoreCase("1")){
+            //player doesn't take damage this turn - uses protect card
+            currentPlayer.playCard(Integer.parseInt(decision));
+        }
+        if (decision.equalsIgnoreCase(Integer.toString(opponentPlayer.getDamage()))) {
+            //player doesn't take damage this turn - uses special ability of attacking card
+            currentPlayer.playCardInDefense(Integer.parseInt(decision));
+        }
+    }
+
+    public void testCommandCurrentPlayerUnderAttack(Player currentPlayer, Player opponentPlayer, HelpInputProvider inputProvider){
+
+        System.out.println("WOW your opponent's attacking your health points with " + opponentPlayer.getDamage() + " damage!!! \r\n");
+
+        if (currentPlayer.checkForProtectionPossibilitiesInHand(opponentPlayer.getLastPlayedCard())){
+            testCommandTryToDefend(currentPlayer, opponentPlayer, inputProvider);
+        }
+        else {
+            //player must take damage from attack
+            currentPlayer.takeDamage(opponentPlayer.getDamage());
+            System.out.println("Ohhh you've taken damage... Health: " + currentPlayer.getHealth() + "\r\n");
         }
     }
 }

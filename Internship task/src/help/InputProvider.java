@@ -1,2 +1,5 @@
-package help;public interface InputProvider {
+package help;
+
+public interface InputProvider {
+    String getInput();
 }

@@ -2,14 +2,15 @@ package test;
 
 import cards.Card;
 import game.Game;
+import help.HelpInputProvider;
 import org.junit.Test;
 import player.Player;
 import utility.Utility;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class TestGame {
     @Test
@@ -39,6 +40,8 @@ public class TestGame {
         assertEquals(false, b);
         b = game.testCommandForHasHealth(10);
         assertEquals(true, b);
+        b = game.testCommandForHasHealth(-10);
+        assertEquals(false, b);
     }
 
     @Test
@@ -77,7 +80,82 @@ public class TestGame {
 
     @Test
     public void testGetPlayerDistinctInput() {
+        new Utility();
+        List<Integer> cards = new ArrayList<>();
+        cards.add(4);
+        List<Card> deck = Utility.testCommandGenerateCards(cards);
+        Player player1 = new Player(20, deck);
+        Player player2 = new Player(20, deck);
+        player1.drawCard();
+        Game game = new Game(player1, player2);
 
+        HelpInputProvider inputProvider = new HelpInputProvider("none", "take", "1", "4");
+
+        // case 1
+        assertEquals("take", game.testCommandGetPlayersDistinctInput(3, player1, inputProvider));
+        // case 2
+        assertEquals("1", game.testCommandGetPlayersDistinctInput(3, player1, inputProvider));
+        // case 3
+        assertEquals("4", game.testCommandGetPlayersDistinctInput(4, player1, inputProvider));
+    }
+
+    @Test
+    public void testTryToDefend() {
+        new Utility();
+        List<Integer> cards = new ArrayList<>();
+        cards.add(4);
+        cards.add(1);
+        List<Card> deck = Utility.testCommandGenerateCards(cards);
+        Player player1 = new Player(20, deck);
+        deck = Utility.testCommandGenerateCards(cards);
+        Player player2 = new Player(20, deck);
+        player1.drawCard();
+        player1.drawCard();
+        player2.drawCard();
+        player2.drawCard();
+        Game game = new Game(player1, player2);
+
+        // both players have one attack 4 card and one protect card in hand
+        HelpInputProvider inputProvider = new HelpInputProvider("none", "take", "1", "4");
+
+        // case 1 -- player takes damage
+        player2.testCommandSetDamage(4);
+        game.testCommandTryToDefend(player1, player2, inputProvider);
+        assertEquals(16, player1.getHealth());
+        // case 2 -- player uses protect card
+        game.testCommandTryToDefend(player1, player2, inputProvider);
+        assertEquals(16, player1.getHealth());
+        // case 3 -- player uses attack card for defence
+        game.testCommandTryToDefend(player1, player2, inputProvider);
+        assertEquals(16, player1.getHealth());
+    }
+
+    @Test
+    public void testCurrentPlayerUnderAttack() {
+        new Utility();
+        List<Integer> cards = new ArrayList<>();
+        cards.add(4);
+        cards.add(1);
+        List<Card> deck = Utility.testCommandGenerateCards(cards);
+        Player player1 = new Player(20, deck);
+        deck = Utility.testCommandGenerateCards(cards);
+        Player player2 = new Player(20, deck);
+        player2.drawCard();
+        player2.drawCard();
+        Game game = new Game(player1, player2);
+
+        // player2 has one attack 4 card and one protect card in hand
+        HelpInputProvider inputProvider = new HelpInputProvider("1", "4");
+
+        // case 1 -- player1 takes damage
+        player2.testCommandSetDamage(4);
+        game.testCommandCurrentPlayerUnderAttack(player1, player2, inputProvider);
+        assertEquals(16, player1.getHealth());
+        // case 2 -- player1 can defend himself
+        player1.drawCard();
+        player1.drawCard();
+        game.testCommandCurrentPlayerUnderAttack(player1, player2, inputProvider);
+        assertEquals(16, player1.getHealth());
     }
 
 }
